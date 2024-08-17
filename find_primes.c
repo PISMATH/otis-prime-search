@@ -54,7 +54,7 @@ int main() {
     mpz_t p;
     mpz_init(p);
 
-    for (int i = 0; i < max_prime_size; i++) {
+    for (int i = 1; i < max_prime_size; i++) {
         int skip = 0;
         for (int j = 0; j < bad_mods_count; j += 2) {
             int rem = bad_mods[j];
