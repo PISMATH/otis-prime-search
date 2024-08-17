@@ -36,7 +36,13 @@ int is_prime(mpz_t p) {
     return mpz_probab_prime_p(p, 25) > 0;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        printf("Usage: %s <max_prime_size>\n", argv[0]);
+        return 1;
+    }
+
+    int max_prime_size = atoi(argv[1]);
     const char* filename = "bad_mods.txt";
     int* bad_mods;
     int bad_mods_count;
@@ -47,7 +53,6 @@ int main() {
 
     printf("Starting search with %d bad mods to use\n", bad_mods_count / 2);
 
-    int max_prime_size = 1000;
     int num_otis_primes = 7; // Because the mods rule out the first 7 otis primes
     int failed_prime_tests = 0;
 
