@@ -31,9 +31,39 @@ int read_bad_mods(const char* filename, int** bad_mods, int* bad_mods_count) {
     return 0;
 }
 
-// Function to test if a number is prime using GMP
-int is_prime(mpz_t p) {
-    return mpz_probab_prime_p(p, 1) > 0;
+// Optimized function to check if p = 2^k - 3 is prime
+int is_otis_prime(int k) {
+    mpz_t p, base, exponent, result;
+    mpz_init(p);
+    mpz_init(base);
+    mpz_init(exponent);
+    mpz_init(result);
+
+    // Calculate p = 2^k - 3
+    mpz_ui_pow_ui(p, 2, k);
+    mpz_sub_ui(p, p, 3);
+
+    // Calculate base = 2
+    mpz_set_ui(base, 2);
+
+    // Calculate exponent = 2^(k-1)
+    mpz_ui_pow_ui(exponent, 2, k - 1);
+
+    // Calculate result = base^exponent mod p
+    mpz_powm(result, base, exponent, p);
+
+    // Check if result == p - 1 (which is -4 mod p)
+    mpz_add_ui(result, result, 4);
+
+    int is_prime = mpz_cmp(result, p) == 0;
+
+    // Clear memory
+    mpz_clear(p);
+    mpz_clear(base);
+    mpz_clear(exponent);
+    mpz_clear(result);
+
+    return is_prime;
 }
 
 int main(int argc, char* argv[]) {
@@ -56,9 +86,6 @@ int main(int argc, char* argv[]) {
     int num_otis_primes = 7; // Because the mods rule out the first 7 otis primes
     int failed_prime_tests = 0;
 
-    mpz_t p;
-    mpz_init(p);
-
     for (int i = 1; i < max_prime_size; i++) {
         int skip = 0;
         for (int j = 0; j < bad_mods_count; j += 2) {
@@ -73,10 +100,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
-        mpz_ui_pow_ui(p, 2, i);
-        mpz_sub_ui(p, p, 3);
-
-        if (is_prime(p)) {
+        if (is_otis_prime(i)) {
             printf("%d\n", i);
             num_otis_primes += 1;
         } else {
@@ -84,7 +108,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    mpz_clear(p);
     free(bad_mods);
 
     printf("Finished search with %d otis primes found\n", num_otis_primes);
