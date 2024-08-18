@@ -33,7 +33,7 @@ int read_bad_mods(const char* filename, int** bad_mods, int* bad_mods_count) {
 
 // Function to test if a number is prime using GMP
 int is_prime(mpz_t p) {
-    return mpz_probab_prime_p(p, 25) > 0;
+    return mpz_probab_prime_p(p, 1) > 0;
 }
 
 int main(int argc, char* argv[]) {
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    printf("Starting search with %d bad mods to use\n", bad_mods_count / 2);
+    printf("Starting search with %d bad mods to use\n", bad_mods_count);
 
     int num_otis_primes = 7; // Because the mods rule out the first 7 otis primes
     int failed_prime_tests = 0;
