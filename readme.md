@@ -41,3 +41,5 @@ You can change the number `1000` to adjust the optimization level.
 ./find_primes 1000
 ```
 You can change the number `1000` to find more Otis primes.
+
+Note, the code is mostly black magic, I do not know how it works, but it does.
